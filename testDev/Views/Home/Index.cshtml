@@ -1,0 +1,205 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+&nbsp;
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-success w-100" >Datos Internet fijo</button>
+        <div class="mt-5 card">
+            &nbsp;
+            <table class="table table-bordered table-hover display" id="myTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Año</th>
+                        <th scope="col">Ingresos</th>
+                        <th scope="col">Proveedor</th>
+                        <th scope="col">Trimestre</th>
+                    </tr>
+                </thead>
+                <tbody id="contenido">
+                </tbody>
+            </table>
+            <div class="card-footer" style="text-align:right;">
+                <button id="agreplan" type="submit" class="btn btn-primary btn-sm" onclick="enviarDatos1()">
+                    <i class="principal fa fa-dot-circle-o"></i>
+                    <i class="loading-icon fa fa-spinner fa-spin hide"></i>
+                    <span class="btn-txt">Enviar</span>
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-success w-100" >Datos Internet Movil</button>
+        <div class="mt-5 card">
+            &nbsp;
+            <table class="table table-bordered table-hover" id="myTable2">
+                <thead>
+                    <tr>
+                        <th>Año</th>
+                        <th>Timestre</th>
+                        <th>Proveedor</th>
+                        <th>Segmento</th>
+                        <th>Terminal</th>
+                        <th>Ingresos</th>
+                    </tr>
+                </thead>
+                <tbody id="contenido1">
+                </tbody>
+            </table>
+            <div class="card-footer" style="text-align:right;">
+                <button id="agreplan" type="submit" class="btn btn-primary btn-sm" onclick="enviarDatos2()">
+                    <i class="principal fa fa-dot-circle-o"></i>
+                    <i class="loading-icon fa fa-spinner fa-spin hide"></i>
+                    <span class="btn-txt">Enviar</span>
+                </button>
+                <button type="reset" class="btn btn-danger btn-sm">
+                    <i class="fa fa-ban"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    window.onload = async function () {
+        await traer()
+        await traer1()
+    }
+    let tabla1 = null;
+    let tabla2 = null;
+    let data1 = []
+    let data2 = []
+    function traer() {
+        const contenido = $("#contenido")
+        fetch('https://www.datos.gov.co/resource/rcst-xw55.json')
+            .then(res => res.json())
+            .catch(err => [])
+            .then(data => {
+                data1 = data
+                data.forEach(function (el) {
+                    contenido.append(`<tr>
+                    <th scope="row">${ el.a_o}</th>
+                    <td>${ new Intl.NumberFormat("de-DE").format(el.ingresos)}</td>
+                    <td>${ el.proveedor}</td>
+                    <td>${ el.trimestre}</td>
+                    </tr>`)
+                })
+                $('#myTable thead tr').clone(true).appendTo('#myTable thead');
+                $('#myTable thead tr:eq(1) th').each(function (i) {
+                    var title = $(this).text();
+                    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+                    $('input', this).on('keyup change', function () {
+                        if (tabla1.column(i).search() !== this.value) {
+                            tabla1
+                                .column(i)
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+                });
+                tabla1 = $('#myTable').DataTable({
+                    orderCellsTop: true,
+                    fixedHeader: true
+                });
+            })
+    }
+
+    //data movil
+    function traer1() {
+        fetch('https://www.datos.gov.co/resource/6msf-tmbd.json')
+            .then(res => res.json())
+            .catch(err => [])
+            .then(datos => {
+                data2 = datos
+                const contenido = $('#contenido1')
+                datos.forEach(function (el) {
+                    contenido.append(`<tr>
+                    <td scope="row">${ el.a_o}</td>
+                    <td>${ el.trimestre}</td>
+                    <td>${ el.proveedor}</td>
+                    <td>${ el.segmento}</td>
+                    <td>${ el.terminal}</td>
+                    <td>${ new Intl.NumberFormat("de-DE").format(el.ingresos)}</td>
+                     </tr>`)
+                })
+                $('#myTable2 thead tr').clone(true).appendTo('#myTable2 thead');
+                $('#myTable2 thead tr:eq(1) th').each(function (i) {
+                    var title = $(this).text();
+                    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+                    $('input', this).on('keyup change', function () {
+                        if (tabla2.column(i).search() !== this.value) {
+                            tabla2
+                                .column(i)
+                                .search(this.value)
+                                .draw();
+                        }
+                    });
+                });
+                tabla2= $('#myTable2').DataTable({
+                    orderCellsTop: true,
+                    fixedHeader: true
+                });
+            })
+    }
+    function enviarDatos1() {
+        var Valores = [];
+        var url = "/Home/add";
+
+        for (var i = 0; i < data1.length; i++) {
+            Valores.push(data1[i]);
+        }
+
+        var data = {
+            Valores: JSON.stringify(Valores)  
+        }
+
+
+
+        jQuery.post(url, data).done(function (data) {
+            alert("Se realizaron los registros de Internet Fijo con exito!!");
+            window.location.href = "/Home/Index";
+
+        }).fail(manejarErrorAjax).always(function () {
+
+        });
+        console.log(data1)
+    }
+
+    function enviarDatos2() {
+        var Valores = [];
+        var url = "/Home/add1";
+
+        for (var i = 0; i < data2.length; i++) {
+            Valores.push(data2[i]);
+        }
+
+        var data = {
+            Valores: JSON.stringify(Valores)
+        }
+
+
+
+        jQuery.post(url, data).done(function (data) {
+            alert("Se realizaron los registros de Internet Movil con exito!!");
+            window.location.href = "/Home/Index";
+
+        }).fail(manejarErrorAjax).always(function () {
+
+        });
+        console.log(data2)
+    }
+</script>
+
+
+
+

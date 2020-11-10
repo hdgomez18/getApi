@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="pruebaModelStoreContainer" CdmEntityContainer="pruebaEntities">
+    <EntitySetMapping Name="ingresos">
+      <EntityTypeMapping TypeName="pruebaModel.ingreso">
+        <MappingFragment StoreEntitySet="ingresos">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="anio" ColumnName="anio" />
+          <ScalarProperty Name="trimestre" ColumnName="trimestre" />
+          <ScalarProperty Name="proveedor" ColumnName="proveedor" />
+          <ScalarProperty Name="segmento" ColumnName="segmento" />
+          <ScalarProperty Name="terminal" ColumnName="terminal" />
+          <ScalarProperty Name="ingresos" ColumnName="ingresos" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

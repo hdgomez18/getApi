@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="pruebaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="ingreso">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="anio" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="trimestre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="proveedor" Type="String" MaxLength="800" FixedLength="false" Unicode="false" />
+    <Property Name="segmento" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="terminal" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="ingresos" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityContainer Name="pruebaEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="ingresos" EntityType="Self.ingreso" />
+  </EntityContainer>
+</Schema>
